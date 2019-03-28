@@ -82,7 +82,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 	 * @protected
 	 */
 	_beforeInitialize () {
-		super._beforeInitialize();
+		this.$list.addClass(this.cssReadyClass);
 	}
 
 	/**
@@ -113,7 +113,6 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 				this.firstInitialize = false;
 			}
 			this._beforeInitialize();
-			this.$list.addClass(this.cssReadyClass);
 			this.$list.slick(this.settings);
 			this.isInitialized = true;
 			this._afterInitialize();
