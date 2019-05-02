@@ -55,7 +55,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 	 */
 	get defaultProps () {
 		return {
-			pauseAutoPlayInOutOfView: true,
+			pauseAutoplayInOutOfView: false,
 			cssReadyClass: 'is-ready',
 			cssInitializedClass: 'is-initialized',
 			$listSelector: '[data-slick-carousel-list]',
@@ -126,18 +126,8 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 	 * @protected
 	 */
 	_afterInitialize () {
-		if (this.props.pauseAutoPlayInOutOfView && this.settings.autoplay) {
-			this.$list.on('inview', (event, isInView) => {
-				if (this.isInitialized) {
-					if (isInView) {
-						this.update();
-						this.$list.slick('slickPlay');
-					} else {
-						this.$list.slick('slickPause');
-					}
-				}
-			});
-			this.$list.trigger('inview');
+		if (this.props.pauseAutoplayInOutOfView && this.settings.autoplay) {
+			this._autoplayInViewObserver();
 		}
 		this.$container.addClass(this.props.cssInitializedClass);
 	}
@@ -149,11 +139,15 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 			if (this.firstInitialize) {
 				this._setup();
 				this.firstInitialize = false;
+				this._beforeInitialize();
 			}
-			this._beforeInitialize();
+
 			this.$list.slick(this.settings);
 			this.isInitialized = true;
-			this._afterInitialize();
+
+			if (this.firstInitialize) {
+				this._afterInitialize();
+			}
 		}
 	}
 
@@ -161,10 +155,27 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 	// extend interface
 	// ------------------------------
 
+	/**
+	 * @protected
+	 */
+	_autoplayInViewObserver () {
+		this.$list.on('inview', (event, isInView) => {
+			if (this.isInitialized) {
+				if (isInView) {
+					this.update();
+					this.$list.slick('slickPlay');
+				} else {
+					this.$list.slick('slickPause');
+				}
+			}
+		});
+		this.$list.trigger('inview');
+	}
+
 	destroy () {
 		if (this.isInitialized) {
 			this.$list.unslick();
-			this.$list.removeClass(this.props.cssReadyClass);
+			this.isInitialized = false;
 		}
 	}
 
@@ -181,7 +192,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 
 /**
  * @typedef {Object} SlickCarouselProps
- * @property {boolean} [pauseAutoPlayInOutOfView] - true,
+ * @property {boolean} [pauseAutoplayInOutOfView] - true,
  * @property {string} [cssReadyClass] - 'is-ready',
  * @property {string} [cssInitializedClass] - 'is-initialized',
  * @property {string} [$listSelector] - '[data-slick-carousel-list]',
