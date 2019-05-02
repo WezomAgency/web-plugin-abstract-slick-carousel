@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dutchenkoOleg/web-plugin-abstract-slick-carousel.git"
+    "url": "git+https://github.com/WezomAgency/web-plugin-abstract-slick-carousel.git"
   },
   "keywords": [],
   "author": "Oleg Dutchenko <dutchenko.o.dev@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dutchenkoOleg/web-plugin-abstract-slick-carousel/issues"
+    "url": "https://github.com/WezomAgency/web-plugin-abstract-slick-carousel/issues"
   },
-  "homepage": "https://github.com/dutchenkoOleg/web-plugin-abstract-slick-carousel#readme",
+  "homepage": "https://github.com/WezomAgency/web-plugin-abstract-slick-carousel#readme",
   "devDependencies": {
     "eslint-config-wezom-relax": "^1.1.0"
   },
@@ -24,6 +24,6 @@
     "jquery": "^3.3.1",
     "jquery-inview": "^1.1.2",
     "slick-carousel": "^1.8.1",
-    "web-plugin-interface": "^3.0.0"
+    "web-plugin-interface": "^3.0.1"
   }
 }
