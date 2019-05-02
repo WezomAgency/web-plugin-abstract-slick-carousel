@@ -3,6 +3,7 @@
 /**
  * @module AbstractSlickCarousel
  * @author OlegDutchenko <dutchenko.o.dev@gmail.com>
+ * @version 3.0.0
  */
 
 // ----------------------------------------
@@ -25,33 +26,68 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 	/**
 	 * @param {jQuery} $container
 	 * @param {SlickCarouselSettings} clientSettings
+	 * @param {SlickCarouselSettings} clientProps
 	 */
-	constructor ($container, clientSettings = {}) {
+	constructor ($container, clientSettings = {}, clientProps) {
 		super();
 
 		this.$container = $container;
-		this.clientSettings = clientSettings;
+		this.$list = $(null);
+		this.$dots = $(null);
+		this.$prevArrow = $(null);
+		this.$nextArrow = $(null);
+		this.$arrows = $(null);
+
 		this.isInitialized = false;
 		this.firstInitialize = true;
-		this.cssReadyClass = 'is-ready';
-		this.pauseAutoPlayInOutOfView = false;
+
+		/** @type {SlickCarouselProps} */
+		this.props = {};
+		this.clientProps = clientProps;
 
 		/** @type {SlickCarouselSettings} */
 		this.settings = {};
+		this.clientSettings = clientSettings;
+	}
 
-		this.$list = this.$container.find('[data-slick-carousel-list]');
-		this.$dots = this.$container.find('[data-slick-carousel-dots]');
-		this.$prevArrow = this.$container.find('[data-slick-carousel-prev-arrow]');
-		this.$nextArrow = this.$container.find('[data-slick-carousel-next-arrow]');
-		this.$arrows = this.$prevArrow.add(this.$nextArrow);
+	/**
+	 * @type {SlickCarouselProps}
+	 */
+	get defaultProps () {
+		return {
+			pauseAutoPlayInOutOfView: true,
+			cssReadyClass: 'is-ready',
+			cssInitializedClass: 'is-initialized',
+			$listSelector: '[data-slick-carousel-list]',
+			$dotsSelector: '[data-slick-carousel-dots]',
+			$prevArrowSelector: '[data-slick-carousel-prev-arrow]',
+			$nextArrowSelector: '[data-slick-carousel-next-arrow]'
+		};
+	}
+
+	/**
+	 * @type {SlickCarouselSettings}
+	 */
+	get defaultSettings () {
+		return super.defaultSettings;
 	}
 
 	/**
 	 * @protected
 	 */
 	_setup () {
+		// merge props
+		this.props = $.extend({}, this.defaultProps, this.clientProps);
+
+		// get elements
+		this.$list = this.$container.find(this.props.$listSelector);
+		this.$dots = this.$container.find(this.props.$dotsSelector);
+		this.$prevArrow = this.$container.find(this.props.$prevArrowSelector);
+		this.$nextArrow = this.$container.find(this.props.$nextArrowSelector);
+		this.$arrows = this.$prevArrow.add(this.$nextArrow);
+
 		// merge settings
-		let responsive = $.extend([], this.defaults);
+		let responsive = $.extend([], this.defaultSettings);
 		let clientResponsive = $.extend([], this.clientSettings.responsive);
 		if (responsive.length && clientResponsive.length) {
 			clientResponsive.forEach(({ breakpoint, settings }) => {
@@ -67,29 +103,30 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 			});
 		}
 
-		this.settings = $.extend(true, {}, this.defaults, this.clientSettings, {
+		this.settings = $.extend(true, {}, this.defaultSettings, this.clientSettings, {
 			responsive,
 			appendDots: this.$dots,
 			prevArrow: this.$prevArrow,
 			nextArrow: this.$nextArrow
 		});
 
-		// out of view for autoplay
-		this.pauseAutoPlayInOutOfView = this.settings.autoplay;
+		// sanitize
+		delete this.clientProps;
+		delete this.clientSettings;
 	}
 
 	/**
 	 * @protected
 	 */
 	_beforeInitialize () {
-		this.$list.addClass(this.cssReadyClass);
+		this.$container.addClass(this.props.cssReadyClass);
 	}
 
 	/**
 	 * @protected
 	 */
 	_afterInitialize () {
-		if (this.pauseAutoPlayInOutOfView && this.settings.autoplay) {
+		if (this.props.pauseAutoPlayInOutOfView && this.settings.autoplay) {
 			this.$list.on('inview', (event, isInView) => {
 				if (this.isInitialized) {
 					if (isInView) {
@@ -102,6 +139,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 			});
 			this.$list.trigger('inview');
 		}
+		this.$container.addClass(this.props.cssInitializedClass);
 	}
 
 	initialize () {
@@ -119,13 +157,6 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 		}
 	}
 
-	/**
-	 * @type {SlickCarouselSettings}
-	 */
-	get defaults () {
-		return super.defaults;
-	}
-
 	// ------------------------------
 	// extend interface
 	// ------------------------------
@@ -133,7 +164,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 	destroy () {
 		if (this.isInitialized) {
 			this.$list.unslick();
-			this.$list.removeClass(this.cssReadyClass);
+			this.$list.removeClass(this.props.cssReadyClass);
 		}
 	}
 
@@ -147,6 +178,17 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 // ----------------------------------------
 // Definitions
 // ----------------------------------------
+
+/**
+ * @typedef {Object} SlickCarouselProps
+ * @property {boolean} [pauseAutoPlayInOutOfView] - true,
+ * @property {string} [cssReadyClass] - 'is-ready',
+ * @property {string} [cssInitializedClass] - 'is-initialized',
+ * @property {string} [$listSelector] - '[data-slick-carousel-list]',
+ * @property {string} [$dotsSelector] - '[data-slick-carousel-dots]',
+ * @property {string} [$prevArrowSelector] - '[data-slick-carousel-prev-arrow]',
+ * @property {string} [$nextArrowSelector] - '[data-slick-carousel-next-arrow]'
+ */
 
 /**
  * @typedef {Object} SlickCarouselSettings
