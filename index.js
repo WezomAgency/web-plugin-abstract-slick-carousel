@@ -3,7 +3,7 @@
 /**
  * @module AbstractSlickCarousel
  * @author OlegDutchenko <dutchenko.o.dev@gmail.com>
- * @version 3.0.0
+ * @version 3.0.1
  */
 
 // ----------------------------------------
@@ -174,7 +174,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 
 	destroy () {
 		if (this.isInitialized) {
-			this.$list.unslick();
+			this.$list.slick('unslick');
 			this.isInitialized = false;
 		}
 	}
