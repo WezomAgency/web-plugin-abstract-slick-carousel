@@ -138,7 +138,6 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 		} else {
 			if (this.firstInitialize) {
 				this._setup();
-				this.firstInitialize = false;
 				this._beforeInitialize();
 			}
 
@@ -147,6 +146,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 
 			if (this.firstInitialize) {
 				this._afterInitialize();
+				this.firstInitialize = false;
 			}
 		}
 	}
