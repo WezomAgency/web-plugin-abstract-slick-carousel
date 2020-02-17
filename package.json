@@ -1,6 +1,6 @@
 {
   "name": "web-plugin-abstract-slick-carousel",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "eslint-config-wezom-relax": "^1.1.0"
   },
   "dependencies": {
+    "@types/slick-carousel": "^1.6.34",
     "jquery": "^3.3.1",
     "jquery-inview": "^1.1.2",
     "slick-carousel": "^1.8.1",
