@@ -11,8 +11,6 @@ import { JQuerySlickOptions } from 'web-plugin-abstract-slick-carousel/slick-car
 // Public
 // ----------------------------------------
 
-
-
 export interface JQuerySlickProps {
 	pauseAutoplayInOutOfView: boolean;
 	cssReadyClass: string;
@@ -23,10 +21,10 @@ export interface JQuerySlickProps {
 	$nextArrowSelector: string;
 }
 
-export class AbstractSlickCarousel extends WebPluginInterface {
+export class AbstractSlickCarousel<P = JQuerySlickProps, S = JQuerySlickOptions> extends WebPluginInterface {
 	$container: JQuery;
-	props: Partial<JQuerySlickProps>;
-	settings: Partial<JQuerySlickOptions>;
+	props: Partial<P>;
+	settings: Partial<S>;
 	$list: JQuery;
 	$dots: JQuery;
 	$prevArrow: JQuery;
@@ -37,11 +35,11 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 
 	constructor(
 		$container: JQuery,
-		clientSettings: Partial<JQuerySlickOptions> = {},
-		clientProps: Partial<JQuerySlickProps> = {}
+		clientSettings: Partial<S> = {},
+		clientProps: Partial<P> = {}
 	);
-	get defaultProps(): Partial<JQuerySlickProps>;
-	get defaultSettings(): Partial<JQuerySlickOptions>;
+	get defaultProps(): Partial<P>;
+	get defaultSettings(): Partial<S>;
 	protected _setup(): void;
 	protected _beforeInitialize(): void;
 	protected _afterInitialize(): void;
