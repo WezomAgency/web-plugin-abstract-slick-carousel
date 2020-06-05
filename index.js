@@ -68,7 +68,7 @@ export class AbstractSlickCarousel extends WebPluginInterface {
 		this.$arrows = this.$prevArrow.add(this.$nextArrow);
 
 		// merge settings
-		let responsive = $.extend([], this.defaultSettings.settings || []);
+		let responsive = $.extend([], this.defaultSettings.responsive || []);
 		let clientResponsive = $.extend([], this.clientSettings.responsive);
 		if (responsive.length && clientResponsive.length) {
 			clientResponsive.forEach(({ breakpoint, settings }) => {
